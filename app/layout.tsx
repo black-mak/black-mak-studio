@@ -7,7 +7,6 @@ import MagicLayer from "@/components/MagicLayer";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
-import Intro from "@/components/Intro";
 import SmoothScroll from "@/components/SmoothScroll";
 import { Analytics } from "@vercel/analytics/react";
 import { SERVICE_TIERS, fmtPrice } from "@/lib/services";
@@ -103,7 +102,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <I18nProvider>
-          <Intro />
           <SmoothScroll />
           <UIEffects />
           <MagicLayer />

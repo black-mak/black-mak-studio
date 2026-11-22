@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
@@ -7,105 +7,193 @@ import ScaleTest from "./ScaleTest";
 import HeadlineReveal from "./HeadlineReveal";
 import { sound } from "@/lib/sound";
 
-// Cards open INTERNAL case-study pages (/work/[slug]) — the visitor stays
-// inside the studio's narrative (pricing, process, CTA all one scroll away).
-// Behance remains reachable from the case page itself + the archive link.
-const FEATURED = [
+type WorkItem = {
+  n: string;
+  href: string;
+  behance: string;
+  img: string;
+  titleKey: string;
+  tagsKey: string;
+  outKey?: string;
+  cls?: string;
+  feature?: boolean;
+};
+
+// Projects mapped with their exact Behance gallery links and internal case study pages
+const FEATURED: WorkItem[] = [
   {
     n: "01",
-    href: "/work/logos-vol-2",
-    img: "/images/work/vol2/vol2-02.jpg",
+    href: "/work/logos-vol-1",
+    behance: "https://www.behance.net/gallery/60219345/LOGOS-VOL-1",
+    img: "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200_webp/c03acd60219345.6ad021bd2ee14.jpg",
     titleKey: "work.p1title",
     tagsKey: "work.p1tags",
     outKey: "work.p1out",
     cls: "lg:row-span-2",
     feature: true,
-    hover: "work.viewCase",
   },
   {
     n: "02",
-    href: "/work/logos-vol-1",
-    img: "/images/work/vol1/vol1-03.jpg",
+    href: "/work/black-mak-identity",
+    behance: "https://www.behance.net/gallery/70417691/BLACK-MAK-IDENTITY",
+    img: "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/9ebb8e70417691.6aca88cd861fc.jpg",
     titleKey: "work.p2title",
     tagsKey: "work.p2tags",
     outKey: "work.p2out",
-    hover: "work.viewCase",
   },
   {
     n: "03",
-    href: "/work/outdoor-advertising",
-    img: "/images/work/banners/ban-06.jpg",
+    href: "/work/calligraphi-works",
+    behance: "https://www.behance.net/gallery/67494575/Calligraphy-Work",
+    img: "/images/work/calligraphi-cover.jpg",
     titleKey: "work.p3title",
     tagsKey: "work.p3tags",
     outKey: "work.p3out",
-    hover: "work.viewCase",
   },
 ];
 
-const MORE = [
+const MORE: WorkItem[] = [
   {
     n: "04",
-    href: "/work/makeen",
-    img: "/images/work/makeen/makeen-calligraphy.jpg",
+    href: "/work/one-point-one",
+    behance: "https://www.behance.net/gallery/37676919/11-ONE-POINT-ONE-Visual-identity",
+    img: "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/357a5837676919.6acf2ed499614.png",
     titleKey: "work.p4title",
     tagsKey: "work.p4tags",
     outKey: "work.p4out",
-    hover: "work.viewCase",
   },
   {
     n: "05",
-    href: "/work/calligraphi-works",
-    img: "/images/work/calligraphi-work.jpg",
+    href: "/work/logos-vol-2",
+    behance: "https://www.behance.net/gallery/181721153/LOGOS-VOLI",
+    img: "https://mir-s3-cdn-cf.behance.net/project_modules/2800_webp/310ff4181721153.6a69232816c9e.jpg",
     titleKey: "work.p5title",
     tagsKey: "work.p5tags",
     outKey: "work.p5out",
-    hover: "work.viewCase",
+  },
+  {
+    n: "06",
+    href: "/work/security-eye",
+    behance: "https://www.behance.net/gallery/38153367/SECURITY-EYE-VISUAL-IDENTITY",
+    img: "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/804ef038153367.6acf55ae0abb4.jpg",
+    titleKey: "work.p6title",
+    tagsKey: "work.p6tags",
+    outKey: "work.p6out",
+  },
+  {
+    n: "07",
+    href: "/work/makeen",
+    behance: "https://www.behance.net/gallery/224445345/MAKEEN",
+    img: "/images/work/makeen/makeen-calligraphy.jpg",
+    titleKey: "work.p7title",
+    tagsKey: "work.p7tags",
+    outKey: "work.p7out",
+  },
+  {
+    n: "08",
+    href: "/work/outdoor-advertising",
+    behance: "https://www.behance.net/gallery/37676905/OUTDOOR-ADVERTISING-WORKS-BANNERS",
+    img: "/images/work/banners/ban-06.jpg",
+    titleKey: "work.p8title",
+    tagsKey: "work.p8tags",
+    outKey: "work.p8out",
+    cls: "md:col-span-2",
   },
 ];
 
-function Card({ w, i, eager }: { w: (typeof FEATURED)[number]; i: number; eager?: boolean }) {
+function Card({ w, i, eager }: { w: WorkItem; i: number; eager?: boolean }) {
   const { t } = useI18n();
   return (
     <Reveal delay={i * 0.05} className={w.cls}>
-      <a
-        href={w.href}
-        onClick={() => sound.click("pop")}
-        onMouseEnter={() => sound.click("soft")}
-        className="work-card group block"
-      >
+      <div className="work-card group block">
+        {/* Work Image Container */}
         <div className="work-img-mask relative overflow-hidden border border-line bg-surface">
-          <div className="absolute inset-0 z-[1] bg-gradient-to-br from-transparent to-white/[0.06] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-          <Image
-            src={w.img}
-            alt={t(w.titleKey)}
-            width={1280}
-            height={800}
-            priority={eager}
-            sizes={w.feature ? "(max-width: 1024px) 100vw, 58vw" : "(max-width: 768px) 100vw, 45vw"}
-            className={`w-full object-cover transition duration-700 group-hover:scale-[1.045] ${
-              w.feature ? "aspect-[16/10]" : "aspect-[16/10]"
-            }`}
-          />
-          <span className="absolute bottom-4 right-4 z-[2] bg-white px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.1em] text-black opacity-0 transition duration-300 group-hover:opacity-100">
-            {t(w.hover)}
-          </span>
-        </div>
-        <div className="flex items-start justify-between gap-4 border-b border-line py-5 transition-transform duration-300 group-hover:-translate-y-1">
-          <div className="flex items-baseline gap-4">
-            <span className="font-mono text-[0.6rem] text-faint">{w.n}</span>
-            <h3 className="text-[clamp(1.15rem,2vw,1.75rem)] font-bold leading-[1.05] tracking-tight">
-              {t(w.titleKey)}
-            </h3>
+          {/* Subtle bottom gradient to ensure buttons have optimal contrast */}
+          <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-black/85 via-black/25 to-transparent transition-opacity duration-500 opacity-90 sm:opacity-70 group-hover:opacity-95" />
+
+          {/* Clickable Image leading to Case Study */}
+          <a
+            href={w.href}
+            onClick={() => sound.click("pop")}
+            className="block w-full h-full cursor-pointer"
+            aria-label={t(w.titleKey)}
+          >
+            <Image
+              src={w.img}
+              alt={t(w.titleKey)}
+              width={1280}
+              height={800}
+              priority={eager}
+              sizes={w.feature ? "(max-width: 1024px) 100vw, 58vw" : "(max-width: 768px) 100vw, 45vw"}
+              className={`w-full object-cover transition duration-700 group-hover:scale-[1.045] ${
+                w.feature ? "aspect-[16/10]" : "aspect-[16/10]"
+              }`}
+            />
+          </a>
+
+          {/* High-Contrast Interactive Buttons Bar:
+              - Bottom-Left: View on Behance
+              - Bottom-Right: View Case Study */}
+          <div className="absolute bottom-3 inset-x-3 sm:bottom-4 sm:inset-x-4 z-[5] flex items-center justify-between gap-2.5">
+            {/* View on Behance (Bottom-Left) */}
+            <a
+              href={w.behance}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                e.stopPropagation();
+                sound.click("crisp");
+              }}
+              className="group/behance inline-flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-4 sm:py-2.5 font-mono text-[0.6rem] sm:text-[0.66rem] uppercase tracking-wider font-semibold text-white bg-[#0057ff] hover:bg-[#0047d4] border border-[#0057ff] shadow-[0_4px_16px_rgba(0,87,255,0.4)] hover:shadow-[0_4px_24px_rgba(0,87,255,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 rounded-sm"
+              title="View on Behance"
+            >
+              <span className="font-extrabold text-[0.72rem] leading-none tracking-tight">Bē</span>
+              <span>{t("work.viewBehance")}</span>
+              <span className="transition-transform duration-300 group-hover/behance:translate-x-0.5 group-hover/behance:-translate-y-0.5 rtl:group-hover/behance:-translate-x-0.5">
+                ↗
+              </span>
+            </a>
+
+            {/* View Case Study (Bottom-Right) */}
+            <a
+              href={w.href}
+              onClick={() => sound.click("pop")}
+              className="group/case inline-flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-4 sm:py-2.5 font-mono text-[0.6rem] sm:text-[0.66rem] uppercase tracking-wider font-semibold text-black bg-white hover:bg-[#f0f0eb] border border-white shadow-[0_4px_16px_rgba(0,0,0,0.6)] hover:shadow-[0_0_24px_rgba(255,255,255,0.55)] hover:scale-105 active:scale-95 transition-all duration-300 rounded-sm"
+              title="View Case Study"
+            >
+              <span>{t("work.viewCaseStudy")}</span>
+              <span className="font-bold transition-transform duration-300 group-hover/case:translate-x-0.5 group-hover/case:-translate-y-0.5 rtl:group-hover/case:-translate-x-0.5">
+                ↗
+              </span>
+            </a>
           </div>
-          <span className="text-end font-mono text-[0.6rem] text-muted opacity-70 transition-opacity duration-300 group-hover:opacity-100">{t(w.tagsKey)}</span>
         </div>
-        {w.outKey && (
-          <p className="mt-3 max-w-[52ch] font-mono text-[0.62rem] leading-relaxed tracking-[0.04em] text-faint">
-            {t(w.outKey)}
-          </p>
-        )}
-        <span className="work-title-line mt-2 block" aria-hidden="true" />
-      </a>
+
+        {/* Project Meta Information */}
+        <a
+          href={w.href}
+          onClick={() => sound.click("pop")}
+          className="block group/link"
+        >
+          <div className="flex items-start justify-between gap-4 border-b border-line py-5 transition-transform duration-300 group-hover:-translate-y-0.5">
+            <div className="flex items-baseline gap-4">
+              <span className="font-mono text-[0.6rem] text-faint">{w.n}</span>
+              <h3 className="text-[clamp(1.15rem,2vw,1.75rem)] font-bold leading-[1.05] tracking-tight group-hover/link:text-seal transition-colors">
+                {t(w.titleKey)}
+              </h3>
+            </div>
+            <span className="text-end font-mono text-[0.6rem] text-muted opacity-70 transition-opacity duration-300 group-hover:opacity-100">
+              {t(w.tagsKey)}
+            </span>
+          </div>
+          {w.outKey && (
+            <p className="mt-3 max-w-[52ch] font-mono text-[0.62rem] leading-relaxed tracking-[0.04em] text-faint">
+              {t(w.outKey)}
+            </p>
+          )}
+          <span className="work-title-line mt-2 block" aria-hidden="true" />
+        </a>
+      </div>
     </Reveal>
   );
 }
@@ -131,7 +219,7 @@ export default function Work() {
           ))}
         </div>
 
-        {/* the promise, made tangible — favicon to facade */}
+        {/* The promise, made tangible — favicon to facade */}
         <ScaleTest />
 
         <Reveal delay={0.1}>
@@ -150,7 +238,13 @@ export default function Work() {
         <Reveal>
           <div className="mt-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
             <p className="max-w-[46ch] text-muted">{t("work.footer")}</p>
-            <a href="https://www.behance.net/Muhmed-alaa-el-bank" target="_blank" rel="noopener" onClick={() => sound.click("crisp")} className="text-link">
+            <a
+              href="https://www.behance.net/Muhmed-alaa-el-bank"
+              target="_blank"
+              rel="noopener"
+              onClick={() => sound.click("crisp")}
+              className="text-link"
+            >
               <span>{t("work.archive")}</span>
               <span>↗</span>
             </a>

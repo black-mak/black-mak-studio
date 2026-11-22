@@ -42,19 +42,6 @@ export default function Hero() {
             <Reveal delay={0.24}>
               <p className="lede mt-[clamp(1.8rem,3vw,2.6rem)]">{t("hero.lede")}</p>
             </Reveal>
-            {/* the two differentiators promoted to the first screen */}
-            <Reveal delay={0.3}>
-              <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-[0.72rem] uppercase tracking-[0.14em]">
-                <span className="flex items-center gap-2 text-muted">
-                  <span className="text-ink" aria-hidden="true">◆</span>
-                  {t("hero.usp1")}
-                </span>
-                <span className="flex items-center gap-2 text-muted">
-                  <span className="text-ink" aria-hidden="true">◆</span>
-                  {t("hero.usp2")}
-                </span>
-              </div>
-            </Reveal>
             <Reveal delay={0.34}>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
@@ -102,8 +89,8 @@ export default function Hero() {
               <span className="text-muted">{t("hero.world")}</span>
             </div>
             <div>
-              <b className="block text-lg">{t("hero.years")}</b>
-              <span className="text-muted">{t("hero.since")}</span>
+              <b className="block text-lg">2014—2026</b>
+              <span className="text-muted">{t("hero.experience")}</span>
             </div>
           </div>
         </Reveal>

@@ -1,18 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { getCase, CASES } from "@/lib/cases";
 import Reveal from "@/components/Reveal";
-import SurvivalStage from "./SurvivalStage";
 
 export default function CaseView({ slug }: { slug: string }) {
   const c = getCase(slug);
   const { lang, t } = useI18n();
   const coverRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const [activeImg, setActiveImg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!activeImg) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActiveImg(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [activeImg]);
 
   // cover parallax — the hero image drifts slower than the page (depth cue)
   const { scrollYProgress } = useScroll({
@@ -46,9 +55,23 @@ export default function CaseView({ slug }: { slug: string }) {
     <article className="pt-[clamp(7rem,14vh,10rem)]">
       <div className="container">
         <Reveal>
-          <a href="/#work" className="text-link mb-10 inline-flex">
-            <span>← {t("case.back")}</span>
-          </a>
+          <div className="mb-10 flex items-center justify-between flex-wrap gap-4">
+            <a href="/#work" className="text-link inline-flex">
+              <span>← {t("case.back")}</span>
+            </a>
+            {c.behance && (
+              <a
+                href={c.behance}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 font-mono text-[0.62rem] uppercase tracking-wider font-semibold text-white bg-[#0057ff] hover:bg-[#0047d4] border border-[#0057ff] shadow-[0_4px_14px_rgba(0,87,255,0.35)] hover:shadow-[0_4px_20px_rgba(0,87,255,0.6)] hover:scale-105 active:scale-95 transition-all duration-300 rounded-sm"
+              >
+                <span className="font-extrabold text-[0.7rem] leading-none">Bē</span>
+                <span>{t("work.viewBehance")}</span>
+                <span>↗</span>
+              </a>
+            )}
+          </div>
         </Reveal>
 
         <Reveal>
@@ -109,32 +132,26 @@ export default function CaseView({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* ============================================================
-          THE FIVE SURVIVAL TESTS — pinned, scrubbed by the scroll.
-          The promise the homepage makes ("24px, packaging, signage,
-          monochrome, distance") becomes something the visitor TOUCHES.
-          Desktop only (pinned scenes are a pointer-fine experience);
-          mobile renders a compact static rail instead.
-          ============================================================ */}
-      <SurvivalStage />
-
       <section className="section border-t border-line py-[var(--section)]">
         <div className="container">
           <Reveal>
             <span className="eyebrow mb-8 block text-faint">{t("work.index")}</span>
           </Reveal>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             {c.gallery.map((src, i) => (
-              <Reveal key={src} delay={i * 0.05}>
-                <figure className="overflow-hidden border border-line bg-surface">
+              <Reveal key={`${src}-${i}`} delay={Math.min(i * 0.03, 0.3)}>
+                <figure
+                  onClick={() => setActiveImg(src)}
+                  className="group cursor-zoom-in overflow-hidden border border-line bg-[#0a0a0c] transition-all duration-300 hover:border-seal/60 flex items-center justify-center"
+                >
                   <Image
                     src={src}
-                    alt={`${d.title} — ${lang === "ar" ? "عمل" : "work"} ${i + 1}`}
-                    width={1280}
-                    height={800}
+                    alt={`${d.title} — ${lang === "ar" ? "لوحة" : "work"} ${i + 1}`}
+                    width={1400}
+                    height={950}
                     loading="lazy"
-                    sizes="(max-width: 640px) 100vw, 46vw"
-                    className="w-full object-cover transition duration-700 hover:scale-[1.03]"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="w-full h-auto object-contain transition duration-700 group-hover:scale-[1.02]"
                   />
                 </figure>
               </Reveal>
@@ -199,6 +216,39 @@ export default function CaseView({ slug }: { slug: string }) {
           </div>
         </div>
       </section>
+
+      {/* High-Resolution Lightbox Modal */}
+      {activeImg && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setActiveImg(null)}
+          className="fixed inset-0 z-[250] flex items-center justify-center bg-black/92 p-4 sm:p-8 backdrop-blur-md cursor-zoom-out"
+        >
+          <button
+            type="button"
+            onClick={() => setActiveImg(null)}
+            className="absolute top-6 right-6 z-[260] grid h-11 w-11 place-items-center border border-white/20 bg-black/60 text-white hover:border-white hover:bg-black transition-colors rounded-sm"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+          <div
+            className="relative max-h-[92vh] max-w-[95vw] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={activeImg}
+              alt={d.title}
+              width={2400}
+              height={1600}
+              priority
+              sizes="95vw"
+              className="max-h-[90vh] w-auto max-w-full object-contain border border-line"
+            />
+          </div>
+        </div>
+      )}
     </article>
   );
 }

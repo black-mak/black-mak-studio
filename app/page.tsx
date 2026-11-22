@@ -1,3 +1,4 @@
+import Intro from "@/components/Intro";
 import Hero from "@/components/Hero";
 import SignalStrip from "@/components/SignalStrip";
 import Work from "@/components/Work";
@@ -20,6 +21,7 @@ import StickyCta from "@/components/StickyCta";
 export default function Page() {
   return (
     <main>
+      <Intro />
       <Hero />
       <SignalStrip />
       <Work />
