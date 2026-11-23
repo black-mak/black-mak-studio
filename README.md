@@ -1,4 +1,4 @@
-﻿# BLACK-MAK â€” Portfolio Site
+﻿# BLACK-MAK ” Portfolio Site
 
 Premium logo & visual identity designer portfolio for **Muhamed Alaa Elbank (BLACK-MAK)**.
 Built as a single-page Next.js site with a bilingual (EN/AR) experience, dark-first theme,
@@ -9,7 +9,7 @@ Behance (original profile): https://www.behance.net/Muhmed-alaa-el-bank
 
 ## Stack
 - Next.js 15.5.24 (App Router) + React 19 + TypeScript
-- Tailwind CSS v3 (colors mapped to CSS variables â€” see note below)
+- Tailwind CSS v3 (colors mapped to CSS variables see note below)
 - Framer Motion (animations / scroll reveals / timeline)
 - Custom WebGL fragment-shader background (`components/WebGLBackground.tsx`)
 - Deployed on Vercel (project name **must be lowercase**: `black-mak`)
@@ -67,7 +67,7 @@ public/images/work/     # project images (vol1, vol2, banners, makeen, calligrap
 - **SEO**: `sitemap.xml` (home + all case slugs with hreflang), `robots.txt`, canonical +
   hreflang (en/ar) in `layout.tsx`, and per-case OpenGraph via `generateMetadata` in
   `work/[slug]/page.tsx` (SSG via `generateStaticParams`).
-- **Download portfolio (PDF)**: Contact has a "Download portfolio (PDF)" button â†’
+- **Download portfolio (PDF)**: Contact has a "Download portfolio (PDF)" button 
   `public/portfolio.pdf` (placeholder â€” replace with a designed PDF).
 - **a11y**: "Skip to content" link, `Intro` respects `prefers-reduced-motion`, icon buttons
   carry `aria-label`s.
@@ -79,6 +79,6 @@ public/images/work/     # project images (vol1, vol2, banners, makeen, calligrap
 - The two Hero brand cards (black/white with phone + BLACK-MAK) show **only on desktop**
   (`hidden lg:block`). They are intentionally removed on mobile.
 - Favicon letter is **"M"** (not B).
-- "meaning" / "Ù…Ø¹Ù†Ù‰" in the hero is rendered as an **outline** (`stroke-text`), not italic.
+- "meaning" / "in the hero is rendered as an **outline** (`stroke-text`), not italic.
 - Language toggle label in EN reads **"Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©"** (was "Ø¹"). The header is forced `dir="ltr"`
   so the toggle never jumps sides when switching languages.
